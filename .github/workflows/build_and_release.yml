@@ -19,6 +19,9 @@ jobs:
 
     - name: Build
       run: dotnet build --configuration Release
+      
+    - name: Check environment variables
+      run: echo "DOTNET_ROOT is set to $DOTNET_ROOT"
 
     - name: Print current working directory
       run: echo %cd%  # This is for Windows runners
