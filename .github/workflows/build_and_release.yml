@@ -40,7 +40,7 @@ jobs:
         prerelease: false
       env:
         DOTNET_ROOT: C:\Users\runneradmin\AppData\Local\Microsoft\dotnet
-        GITHUB_TOKEN: ${{ secrets.GIT_ACTIONS }}  # Using your PAT here
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Using your PAT here
 
     - name: Upload Zipped Build to Release
       uses: actions/upload-release-asset@v1
@@ -61,4 +61,4 @@ jobs:
       uses: dev-drprasad/delete-older-releases@v0.1.0
       with:
         keep_latest: 5
-        token: ${{ secrets.MY_PAT }}  # Using your PAT here for cleanup as well
+        token: ${{ secrets.GITHUB_TOKEN }}  # Using your PAT here for cleanup as well
