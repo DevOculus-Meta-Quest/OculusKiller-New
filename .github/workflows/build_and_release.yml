@@ -22,6 +22,11 @@ jobs:
       
     - name: Check environment variables
       run: echo "DOTNET_ROOT is set to $DOTNET_ROOT"
+      
+    - name: Test Token with API Call in Workflow
+      run: |
+        curl -H "Authorization: token ${{ secrets.MY_PAT }}" https://api.github.com/user
+
 
     - name: Print current working directory
       run: echo %cd%  # This is for Windows runners
