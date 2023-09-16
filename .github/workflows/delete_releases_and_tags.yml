@@ -10,6 +10,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Configure Git to use PAT
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git remote set-url origin https://x-access-token:${{ secrets.GIT_ACTIONS }}@github.com/${{ github.repository }}
+
     - name: Delete all releases and tags
       run: |
         # Fetch all tags
