@@ -1,0 +1,27 @@
+name: Delete All Releases and Tags
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Delete all releases
+      run: |
+        releases=$(gh release list --json id -q '.[].id')
+        for release_id in $releases; do
+          gh release delete $release_id --yes
+        done
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Delete all tags
+      run: |
+        tags=$(git tag)
+        for tag in $tags; do
+          git push --delete origin $tag
+        done
