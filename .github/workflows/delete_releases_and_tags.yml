@@ -12,10 +12,14 @@ jobs:
 
     - name: Delete all releases
       run: |
-        releases=$(curl -H "Authorization: token ${{ secrets.GET_ACTIONS }}" -s "https://api.github.com/repos/$GITHUB_REPOSITORY/releases" | jq -r '.[].id')
-        for release_id in $releases; do
-          curl -X DELETE -H "Authorization: token ${{ secrets.GET_ACTIONS }}" "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/$release_id"
-        done
+        response=$(curl -H "Authorization: token ${{ secrets.GET_ACTIONS }}" -s "https://api.github.com/repos/$GITHUB_REPOSITORY/releases")
+        if [[ "$response" != "[]" ]]; then
+          releases=$(echo "$response" | jq -r '.[].id')
+          for release_id in $releases; do
+            curl -X DELETE -H "Authorization: token ${{ secrets.GET_ACTIONS }}" "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/$release_id"
+          done
+        fi
+      shell: /usr/bin/bash -e {0}
 
     - name: Delete all tags
       run: |
@@ -24,3 +28,4 @@ jobs:
           git tag -d $tag
           git push --delete origin $tag
         done
+      shell: /usr/bin/bash -e {0}
