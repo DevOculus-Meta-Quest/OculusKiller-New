@@ -1,4 +1,4 @@
-name: Delete All Releases and Tags
+name: Cleanup All Releases and Tags
 
 on:
   workflow_dispatch:
@@ -7,25 +7,24 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Delete all releases
+    - name: Delete all releases and tags
       run: |
-        response=$(curl -H "Authorization: token ${{ secrets.GET_ACTIONS }}" -s "https://api.github.com/repos/$GITHUB_REPOSITORY/releases")
-        if [[ "$response" != "[]" ]]; then
-          releases=$(echo "$response" | jq -r '.[].id')
-          for release_id in $releases; do
-            curl -X DELETE -H "Authorization: token ${{ secrets.GET_ACTIONS }}" "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/$release_id"
-          done
-        fi
-      shell: /usr/bin/bash -e {0}
+        # Fetch all tags
+        git fetch --tags
 
-    - name: Delete all tags
-      run: |
+        # Delete all releases
+        releases=$(curl -H "Authorization: token ${{ secrets.GIT_ACTIONS }}" -s https://api.github.com/repos/${{ github.repository }}/releases | jq -r '.[].id')
+        for release in $releases; do
+          curl -H "Authorization: token ${{ secrets.GIT_ACTIONS }}" -X DELETE https://api.github.com/repos/${{ github.repository }}/releases/$release
+        done
+
+        # Delete all tags
         tags=$(git tag)
         for tag in $tags; do
-          git tag -d $tag
           git push --delete origin $tag
         done
-      shell: /usr/bin/bash -e {0}
+      env:
+        GIT_ACTIONS: ${{ secrets.GIT_ACTIONS }}
