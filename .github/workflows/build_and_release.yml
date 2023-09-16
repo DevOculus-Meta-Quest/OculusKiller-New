@@ -49,20 +49,21 @@ jobs:
       env:
         DOTNET_ROOT: C:\Users\runneradmin\AppData\Local\Microsoft\dotnet
         GITHUB_TOKEN: ${{ secrets.GIT_ACTIONS}} # Using your PAT here
-       
-    - name: Upload Release Asset via curl 2nd try
+
+    - name: Upload asset using curl
       run: |
        curl `
        -X POST `
        -H "Authorization: token ***" `
        -H "Content-Type: $(file -b --mime-type ./OculusKiller.zip)" `
        -H "Accept: application/vnd.github.v3+json" `
-       --data-binary @./OculusKiller.zip `
+       --data-binary `@./OculusKiller.zip `
        "https://uploads.github.com/repos/$env:GITHUB_REPOSITORY/releases/121385007/assets?name=OculusKiller.zip"
       shell: pwsh
       env:
         DOTNET_ROOT: C:\Users\runneradmin\AppData\Local\Microsoft\dotnet
         GITHUB_REPOSITORY: DevOculus-Meta-Quest/OculusKiller
+
 
 
 
