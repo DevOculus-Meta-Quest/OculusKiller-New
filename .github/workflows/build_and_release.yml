@@ -71,4 +71,4 @@ jobs:
       uses: dev-drprasad/delete-older-releases@v0.1.0
       with:
         keep_latest: 5
-        token: ${{ secrets.GITHUB_TOKEN }}  # Using your PAT here for cleanup as well
+        token: ${{ secrets.GIT_ACTIONS }}  # Using your PAT here for cleanup as well
