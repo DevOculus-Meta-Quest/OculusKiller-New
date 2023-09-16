@@ -10,12 +10,24 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Setup GitHub CLI
+      run: gh auth login --with-token <<< "${{ secrets.GET_ACTIONS }}"
+
     - name: Delete all releases
       run: |
         releases=$(gh release list | awk '{print $1}')
         for release_id in $releases; do
-        gh release delete $release_id --yes
+          gh release delete $release_id --yes
+        done
+      shell: /usr/bin/bash -e {0}
+
+    - name: Delete all tags
+      run: |
+        tags=$(git tag)
+        for tag in $tags; do
+          git tag -d $tag
+          git push --delete origin $tag
         done
       shell: /usr/bin/bash -e {0}
       env:
-        GH_TOKEN: ***
+        GET_ACTIONS: ${{ secrets.GET_ACTIONS }}
