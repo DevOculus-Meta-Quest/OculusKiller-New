@@ -12,16 +12,10 @@ jobs:
 
     - name: Delete all releases
       run: |
-        releases=$(gh release list --json id -q '.[].id')
+        releases=$(gh release list | awk '{print $1}')
         for release_id in $releases; do
-          gh release delete $release_id --yes
+        gh release delete $release_id --yes
         done
+      shell: /usr/bin/bash -e {0}
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Delete all tags
-      run: |
-        tags=$(git tag)
-        for tag in $tags; do
-          git push --delete origin $tag
-        done
+        GH_TOKEN: ***
