@@ -49,6 +49,19 @@ jobs:
       env:
         DOTNET_ROOT: C:\Users\runneradmin\AppData\Local\Microsoft\dotnet
         GITHUB_TOKEN: ${{ secrets.GIT_ACTIONS}} # Using your PAT here
+        
+     - name: Upload Release Asset via curl
+       run: |
+        curl \
+        -X POST \
+        -H "Authorization: token ${{ secrets.MY_PAT }}" \
+        -H "Content-Type: $(file -b --mime-type ./OculusKiller.zip)" \
+        -H "Accept: application/vnd.github.v3+json" \
+        --data-binary @./OculusKiller.zip \
+        "https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/${{ steps.create_release.outputs.id }}/assets?name=OculusKiller.zip"
+       env:
+        GITHUB_REPOSITORY: DevOculus-Meta-Quest/OculusKiller
+
 
     - name: Upload Zipped Build to Release
       uses: actions/upload-release-asset@v1
