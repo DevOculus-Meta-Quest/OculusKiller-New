@@ -50,7 +50,7 @@ jobs:
         DOTNET_ROOT: C:\Users\runneradmin\AppData\Local\Microsoft\dotnet
         GITHUB_TOKEN: ${{ secrets.GIT_ACTIONS}} # Using your PAT here
         
-     - name: Upload Release Asset via curl
+    - name: Upload Release Asset via curl
        run: |
         curl \
         -X POST \
