@@ -20,14 +20,13 @@ jobs:
 
     - name: Build project
       run: dotnet build --configuration Release
-      
+
     - name: Check environment variables
       run: echo "DOTNET_ROOT is set to $DOTNET_ROOT"
-      
+
     - name: Test Token with API Call in Workflow
       run: |
-        curl -H "Authorization: token ${{ secrets.MY_PAT }}" https://api.github.com/user
-
+        curl -H "Authorization: token ${{ secrets.GIT_ACTIONS }}" https://api.github.com/user
 
     - name: Print current working directory
       run: echo %cd%  # This is for Windows runners
@@ -61,13 +60,8 @@ jobs:
         asset_name: OculusRelease.zip
         asset_content_type: application/zip
 
-    - name: Delete old releases
-      run: |
-        # This script will use GitHub API to delete all but the last 5 releases
-        # You'll need to implement this part using GitHub API and your GIT_ACTIONS token
-
   cleanup:
-    needs: build
+    needs: build_and_release
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
